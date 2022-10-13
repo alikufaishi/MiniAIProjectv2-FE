@@ -123,6 +123,7 @@
                 username: usernameDeleteField,
                 password: "password"
             };
+            payload = JSON.stringify(payload)
             const localstorage_user = JSON.parse(localStorage.getItem('user'))
             const inMemoryToken = localstorage_user.token
             fetch("http://localhost:8080/deleteUser",
@@ -185,14 +186,5 @@
     <input type="submit" value="Log Out">
 </form>
 <div id="container">Initial Text</div>
-<button id="testbutton" >test</button>
-<script>
-    const btn = document.getElementById('testbutton');
-    btn.onclick = function(){
-        console.log("knap")
-        fetch("http://localhost:8080/get").then(r => r.json()).
-        then(d => console.log(d));
-    }
-</script>
 </body>
 </html>
