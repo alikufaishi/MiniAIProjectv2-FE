@@ -107,6 +107,28 @@
                 })
         }
 
+        function getEvents() {
+            const div = document.getElementById('container');
+            event.preventDefault()
+            fetch("http://localhost:8081/getEvents", //"https://gaprepservice.azurewebsites.net/createUser"
+                {
+                    method: "GET"
+                })
+                .then(function (res) { // the response to the fetch call itself
+                    div.insertAdjacentHTML(
+                        'beforeend',
+                        `<span style="background-color: red">` + res.status + `</code>`,
+                    );
+                    return res.json();
+                })
+                .then(function (data) { // the data, provided by server response
+                    div.insertAdjacentHTML(
+                        'beforeend',
+                        `<span style="background-color: green">` + JSON.stringify(data) + `</code>`,
+                    );
+                })
+        }
+
 
         function deleteUser(event) {
             const div = document.getElementById('container');
@@ -168,8 +190,8 @@
 </form>
 <br/>
 <form onsubmit="login(event)">
-    <input type="text" value="berit" id="usernameField">
-    <input type="text" value="password" id="passwordField">
+    <input type="text" value="Ole" id="usernameField">
+    <input type="text" value="123" id="passwordField">
     <input type="submit" value="Log in">
 </form>
 
@@ -180,6 +202,10 @@
 <form onsubmit="getSecret(event)">
     <input type="text" value="Some query value" id="paramField">
     <input type="submit" value="Get secret">
+</form>
+<form onsubmit="getEvents()">
+    <input type="text" value="Some query value" id="paramField2">
+    <input type="submit" value="Get events">
 </form>
 
 <form onsubmit="logout(event)">
