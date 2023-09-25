@@ -32,6 +32,18 @@
                 })
         }
 
+        function getToken(){
+            const localstorage_user = JSON.parse(localStorage.getItem('user'))
+            return  localstorage_user.token
+        }
+
+        function printThis(mydiv, txt, color){
+            mydiv.insertAdjacentHTML(
+                'beforeend',
+                `<span style="background-color: ${color}">${txt}</code>`,
+            );
+        }
+
         function signup(event) {
             event.preventDefault()
             const nameField = document.getElementById("nameField").value;
@@ -94,18 +106,6 @@
                 .then((data) => {
                     printThis(div, JSON.stringify(data), "green")
                 })
-        }
-
-        function printThis(mydiv, txt, color){
-            mydiv.insertAdjacentHTML(
-                    'beforeend',
-                    `<span style="background-color: ${color}">${txt}</code>`,
-                );
-        }
-
-        function getToken(){
-            const localstorage_user = JSON.parse(localStorage.getItem('user'))
-            return  localstorage_user.token
         }
 
         function deleteUser(event) {
