@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>Home</title>
     <script >
+        const port = 80
+        const host = "https://sslsec.azurewebsites.net"
+        // const host = "http://localhost"
         let div = ''  // let: can be changed, but not re-declared. Hoisting behavior is Reference error
                       // var: can be changed AND re-declared. Hoisting behavior is 'undefined'
                       // const: can not be changed or re-declared. Hoisting behavior is Reference error
@@ -17,7 +20,7 @@
         });
 
         function myFetch(endpoint, method, payload=null, token){
-            return fetch(`http://localhost:8080/${endpoint}`,  // important to start this line with 'return'
+            return fetch(host+"/"+endpoint,  // important to start this line with 'return'
                 {
                     method: method,
                     body: payload,
@@ -44,6 +47,7 @@
             );
         }
 
+
         function signup(event) {
             event.preventDefault()
             const nameField = document.getElementById("nameField").value;
@@ -53,7 +57,7 @@
                 password: passwordFieldSignup
             };
             payload = JSON.stringify(payload)
-            fetch("http://localhost:8080/signup",
+            fetch(host+"/signup",
                 {
                     method: "POST",
                     body: payload,
@@ -77,7 +81,7 @@
                 password: passwordField
             };
             payload = JSON.stringify(payload)
-            fetch("http://localhost:8080/login",
+            fetch(host+"/login",
                 {
                     method: "POST",
                     body: payload,
