@@ -6,7 +6,7 @@
     <script >
         const port = 80
         const host = "https://sslsec.azurewebsites.net"
-        // const host = "http://localhost"
+        //const host = "http://localhost"
         let div = ''  // let: can be changed, but not re-declared. Hoisting behavior is Reference error
                       // var: can be changed AND re-declared. Hoisting behavior is 'undefined'
                       // const: can not be changed or re-declared. Hoisting behavior is Reference error
@@ -18,6 +18,7 @@
             document.getElementById('logoutForm').addEventListener('submit', logout)
             div = document.getElementById('container')
         });
+
 
         function myFetch(endpoint, method, payload=null, token){
             return fetch(host+"/"+endpoint,  // important to start this line with 'return'
