@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <script >
-        const port = 80
-        const host = "https://sslsec.azurewebsites.net"
-        //const host = "http://localhost"
+    <script>
+        const port = 8080
+        //const host = "https://sslsec.azurewebsites.net"
+        const host = "http://localhost:" + port
         let div = ''  // let: can be changed, but not re-declared. Hoisting behavior is Reference error
                       // var: can be changed AND re-declared. Hoisting behavior is 'undefined'
                       // const: can not be changed or re-declared. Hoisting behavior is Reference error
@@ -71,7 +71,6 @@
                     printThis(div, JSON.stringify(data), "green")
                 })
         }
-
 
         function login(event) {
             event.preventDefault()
@@ -139,7 +138,7 @@
 
     </script>
 </head>
-<body>
+<body>test 5
 <form id="signupForm">
     <input type="text" value="Ole" id="nameField">
     <input type="text" value="123" id="passwordFieldSignup">

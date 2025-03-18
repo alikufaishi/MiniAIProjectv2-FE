@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prep</title>
+  <script>
+    const host = "http://localhost:8080"
+    let div = ''
+    document.addEventListener("DOMContentLoaded", function (){
+      document.getElementById("signupform").addEventListener('submit', signUp)
+      document.getElementById("loginform").addEventListener('submit', login)
+      document.getElementById("getsecretform").addEventListener('submit', getSecret)
+      document.getElementById("deleteUserForm").addEventListener('submit', deleteUser)
+      document.getElementById("logOutForm").addEventListener('submit', logOut)
+      div = document.getElementById("servermessages")
+    })
+
+    function getToken(){
+      const item = localStorage.getItem('user');
+      if(item == undefined){
+        return null
+      }else {
+        const localstorage_user = JSON.parse(item)
+        return localstorage_user.token
+      }
+    }
+
+    function signUp(event){
+      event.preventDefault()
+      const namesignup = document.getElementById("namesignup").value
+      const passwordsignup = document.getElementById("passwordsignup").value
+      //alert("you sign up now " + namesignup + " " + passwordsignup)
+      let payload = {
+        username:namesignup,
+        password:passwordsignup
+      }
+      payload = JSON.stringify(payload)
+      fetch(host + "/signup",{
+        method:"POST",
+        body:payload,
+        headers:{'content-type':'application/json'}
+      }).then(function (res){
+        return res.json()
+      }).then(function (data){
+        const reply = JSON.stringify(data)
+        console.log("data from server ", reply)
+        print(div, reply, "green")
+      })
+
+    }
+
+    function login(event){
+      event.preventDefault()
+      const namelogin = document.getElementById("namelogin").value
+      const passwordlogin = document.getElementById("passwordlogin").value
+      //alert("you sign up now " + namesignup + " " + passwordsignup)
+      let payload = {
+        username:namelogin,
+        password:passwordlogin
+      }
+      payload = JSON.stringify(payload)
+      fetch(host + "/login",{
+        method:"POST",
+        body:payload,
+        headers:{'content-type':'application/json'}
+      }).then(function (res){
+        return res.json()
+      }).then(function (data){
+        const reply = JSON.stringify(data)
+        localStorage.setItem('user', reply)
+        //console.log("data from server ", JSON.stringify(data))
+        print(div,reply,"green")
+      })
+
+    }
+
+    function getSecret(event){
+      event.preventDefault()
+      const token = getToken();
+      if(token==undefined){
+        print(div, "No token. Log in first.", "red")
+        return
+      }else{
+        print(div, "You have a token... ", "green")
+      }
+      const paramField = document.getElementById("paramField").value
+      let payload = {
+        paramField: paramField
+      }
+      payload = JSON.stringify(payload)
+      fetch(host + "/getSecret",{
+        method:"POST",
+        body:payload,
+        headers:{'content-type':'application/json',
+              'Authorization':'Bearer ' + token }
+      }).then(function (res){
+        return res.json()
+      }).then(function (data){
+        const reply = JSON.stringify(data)
+        print(div,reply,"green")
+      })
+    }
+
+    function deleteUser(event){
+      event.preventDefault()
+      const token = getToken();
+      if(token==undefined){
+        print(div, "No token. Log in first.", "red")
+        return
+      }else{
+        print(div, "You have a token... ", "green")
+      }
+      const username_delete = document.getElementById("username_delete").value
+      let payload = {
+        username: username_delete,
+        password: "password" // dummy password
+      }
+      payload = JSON.stringify(payload)
+      fetch(host + "/deleteUser",{
+        method:"DELETE",
+        body:payload,
+        headers:{'content-type':'application/json',
+          'Authorization':'Bearer ' + token }
+      }).then(function (res){
+        return res.json()
+      }).then(function (data){
+        const reply = JSON.stringify(data)
+        print(div,reply,"green")
+      })
+    }
+
+    function logOut(event){
+      event.preventDefault()
+      if(localStorage.getItem('user') != undefined){
+        localStorage.removeItem('user')
+        print(div, "token deleted. User logged out.", "green")
+      }else{
+        print(div, "no token found", "red")
+      }
+    }
+
+    function print(mydiv, text, color){
+       mydiv.insertAdjacentHTML('beforeend',
+               `<span style="background-color: ${color}">${text}</span>`)
+    }
+
+  </script>
+</head>
+<body>
+<h2>Preparing</h2>
+<form id="signupform">
+  Navn: <input type="text" id="namesignup" value="Ole">
+  Pw: <input type="password" id="passwordsignup" value="123">
+  <input type="submit" value="Sign Up">
+</form>
+
+<form id="loginform">
+  Navn: <input type="text" id="namelogin" value="Ole">
+  Pw: <input type="password" id="passwordlogin" value="123">
+  <input type="submit" value="Log In">
+</form>
+
+<form id="getsecretform">
+  <input type="text" id="paramField" placeholder="some query" >
+  <input type="submit" value="Get Secret">
+</form>
+<form id="deleteUserForm">
+  <input type="text" id="username_delete" placeholder="username" >
+  <input type="submit" value="Delete User">
+</form>
+<form id="logOutForm">
+  <input type="submit" value="Log Out">
+</form>
+<div id="servermessages"></div>
+</body>
+</html>
