@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+  <script>
+    const host = "http://localhost:8080"
+    let div = ''
+    document.addEventListener('DOMContentLoaded', function (){
+      div = document.getElementById("serverSvar")
+      document.getElementById("signUpForm").addEventListener('submit', signUp)
+      document.getElementById("logInForm").addEventListener('submit', login)
+      document.getElementById("getSecretForm").addEventListener('submit', getSecret)
+    })
+
+    function signUp(event){
+      event.preventDefault() // forhindrer at formen selv sender request
+      const nameSignUp = document.getElementById("signUpUser").value
+      const passwordSignUp = document.getElementById("signUpPassword").value
+      let payload = {
+        username:nameSignUp,
+        password:passwordSignUp
+      }
+      payload = JSON.stringify(payload)
+      fetch(host+"/signup",{
+        method:"POST",
+        body: payload,
+        headers: {"content-type":"application/json"}
+      }).then(function (response){
+        return response.json()
+      }).then(function (data){
+        print(div,JSON.stringify(data), "green")
+      })
+    }
+
+    function login(event){
+      event.preventDefault() // forhindrer at formen selv sender request
+      const nameSignIn = document.getElementById("logInUser").value
+      const passwordSignIn = document.getElementById("logInPassword").value
+      let payload = {
+        username:nameSignIn,
+        password:passwordSignIn
+      }
+      payload = JSON.stringify(payload)
+      fetch(host+"/login",{
+        method:"POST",
+        body: payload,
+        headers: {"content-type":"application/json"}
+      }).then(function (response){
+        return response.json()
+      }).then(function (data){
+        const reply = JSON.stringify(data)
+        localStorage.setItem('user', reply) // gemmes lokalt i browser
+        print(div,reply, "green")
+      })
+    }
+
+    function getSecret(event){
+      event.preventDefault() // forhindrer at formen selv sender request
+      const token = getToken()
+      if(token == undefined){
+        print(div, "No token, log in first.", "red")
+        return
+      }else {
+        print(div, "Token found...", "green")
+      }
+
+      fetch(host+"/getSecret",{
+        method:"POST",
+        body: null,
+        headers: {"content-type":"application/json",
+                  "Authorization":"Bearer " + token}
+      }).then(function (response){
+        return response.json()
+      }).then(function (data){
+        const reply = JSON.stringify(data)
+        print(div,reply, "green")
+      })
+    }
+
+    function getToken(){
+      const token = localStorage.getItem('user')
+      if(token == undefined){
+        return null
+      }else{
+        const localStorage_user = JSON.parse(token)
+        return localStorage_user.token
+      }
+    }
+
+    function print(myDiv, text, color){
+        myDiv.insertAdjacentHTML('beforeend',
+                `<span style="background-color: ${color}" >${text}</span>`)
+    }
+
+    function logout(){
+      localStorage.removeItem('user')
+    }
+  </script>
+</head>
+<body>
+<h2>Demo</h2>
+<form id="signUpForm">
+  bruger<input type="text" id="signUpUser" value="Ole">
+  pw<input type="password" id="signUpPassword" value="123">
+    <input type="submit" value="Sign Up">
+</form>
+<form id="logInForm">
+  bruger<input type="text" id="logInUser" value="Ole">
+  pw<input type="password" id="logInPassword" value="123">
+  <input type="submit" value="Log In">
+</form>
+<form id="getSecretForm">
+  <input type="submit" value="Get Secret">
+</form>
+<div id="serverSvar"/>
+</body>
+</html>
