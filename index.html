@@ -130,7 +130,7 @@
 
             fetch(host + "/getSecret", {
                 method: "POST",
-                //credentials: 'include', // Automatically send cookies with the request
+                credentials: 'include', // Automatically send cookies with the request
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             })
