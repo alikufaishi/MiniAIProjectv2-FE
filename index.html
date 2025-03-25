@@ -182,11 +182,49 @@
                 })
         }
 
+        // function logout(event) {
+        //     event.preventDefault()
+        //     localStorage.removeItem('user')
+        //     printThis(div, "You have logged out.", "green")
+        // }
+
+        // function logout(event) {
+        //     //alert("logout")
+        //     event.preventDefault()
+        //     fetch(host + '/logout', {
+        //         method: 'POST',
+        //         credentials: 'include'
+        //     }).
+        //     then(function (res) {
+        //         alert("first then")
+        //         res.text().then(msg => printThis(div, msg, "green"));
+        //         //return res.json();
+        //     })
+        //     // .then(function (res) {
+        //     //     // No need to store the token in localStorage anymore.
+        //     //     printThis(div, JSON.stringify(res), "green");
+        //     // })
+        //     .catch(err => {
+        //         printThis(div, err.message, "red");
+        //     });
+        // }
+
         function logout(event) {
-            event.preventDefault()
-            localStorage.removeItem('user')
-            printThis(div, "You have logged out.", "green")
+            event.preventDefault();
+
+            fetch(host + '/logout2', {
+                method: 'POST',
+                credentials: 'include'
+            })
+                .then(res => res.text()) // read response as plain text
+                .then(text => {
+                    printThis(div, text, "green");
+                })
+                .catch(err => {
+                    printThis(div, err.message, "red");
+                });
         }
+
 
     </script>
 </head>
