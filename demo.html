@@ -11,6 +11,7 @@
       document.getElementById("signUpForm").addEventListener('submit', signUp)
       document.getElementById("logInForm").addEventListener('submit', login)
       document.getElementById("getSecretForm").addEventListener('submit', getSecret)
+      document.getElementById("logoutForm").addEventListener('submit', logout)
     })
 
     function signUp(event){
@@ -94,8 +95,17 @@
                 `<span style="background-color: ${color}" >${text}</span>`)
     }
 
-    function logout(){
-      localStorage.removeItem('user')
+    function logout(event){
+      //localStorage.removeItem('user')
+      event.preventDefault()
+      fetch(host + "/logout2",{
+        method:'POST',
+        credentials: 'include'
+      }).then(res => {return res.text()}).
+         then(text => print(div, text, "green")).
+         catch(error => {
+           print(div, error.message, "red")
+      })
     }
   </script>
 </head>
@@ -115,5 +125,8 @@
   <input type="submit" value="Get Secret">
 </form>
 <div id="serverSvar"/>
+<form id="logoutForm">
+  <input type="submit" value="Log Out">
+</form>
 </body>
 </html>
