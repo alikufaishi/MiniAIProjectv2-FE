@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dette er min testside!</title>
+
+    <script>
+
+        // Her tjekkes om brugeren er logget ind før han kan tilgå denne side
+
+        const port = 8080;
+        const host = "http://localhost:" + port;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch(`${host}/getSecret`, {
+                method: "POST",
+                credentials: "include", // vigtigt: sender cookie med JWT
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ paramField: "someValue" }) // hvis nødvendigt
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        // Brugeren er ikke logget ind – redirect til login side
+                        window.location.href = "index.html";
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Vis hemmelig besked fra serveren
+                    const container = document.getElementById("secretMessage");
+                    container.innerText = data.message || "No message";
+                })
+                .catch(error => {
+                    console.error("Fejl ved auth check:", error);
+                    window.location.href = "index.html";
+                });
+        });
+    </script>
+
+
+</head>
+<body>
+    <div id="secretMessage">Loader hemmelig besked fra Ali...</div>
+<p>Er det ikke meningen at der er tekst</p>
+
+</body>
+</html>

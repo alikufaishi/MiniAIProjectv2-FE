@@ -104,6 +104,8 @@
             myFetchWithToken("getSecret", "POST", payload)
                 .then((data) => {
                     printThis(div, JSON.stringify(data), "green")
+                    // Navigér til testside.html hvis adgang lykkes
+                    window.location.href = "bookhelper.html";
                 }).catch(error =>{
                     printThis(div, JSON.stringify(error.message), "red")
             })
