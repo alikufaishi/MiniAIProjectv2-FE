@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Demo</title>
+    <link rel="stylesheet" href="styles.css">
   <script>
     const host = "http://localhost:8080"
     let div = ''
@@ -59,27 +60,24 @@
 
     function getSecret(event){
       event.preventDefault() // forhindrer at formen selv sender request
-      // const token = getToken()
-      // if(token == undefined){
-      //   print(div, "No token, log in first.", "red")
-      //   return
-      // }else {
-      //   print(div, "Token found...", "green")
-      // }
-
-      fetch(host+"/getSecret",{
+      fetch(host+"/getSecret",{ // Det sender request og returnerer et promise objekt
         method:"POST",
-        body: null,
-        credentials: 'include',
-        headers: {"content-type":"application/json"}
-      }).then(function (response){
-        return response.json()
-      }).then(function (data){
-        const reply = JSON.stringify(data)
+        body: null, // det nødvendige JWT-token er allerede i en cookie fra login
+        credentials: 'include', // sender cookie JWT-token med
+        headers: {"content-type":"application/json"} // Unødvendig men ingen skade
+      }).then(function (response){ // Når serveren sender sit objekt tilbage med metadata
+        return response.json() // Returnerer promise med JSON indhold af objektet
+      }).then(function (data){ // Her er data fra JSON-objektet, beskeden fra serveren
+        const reply = JSON.stringify(data) // Omskriver JSON-objekt til en string
+        // Navigér til testside.html hvis adgang lykkes
+        window.location.href = "bookhelper.html";
         print(div,reply, "green")
+      }).catch(error =>{
+        print(div, JSON.stringify(error.message), "red")
       })
     }
 
+    // Ali: bruges ikke til noget (localstorage)
     function getToken(){
       const token = localStorage.getItem('user')
       if(token == undefined){
@@ -110,23 +108,23 @@
   </script>
 </head>
 <body>
-<h2>Demo</h2>
+<h2>Log ind eller opret dig for at få adgang til bogassistenten</h2>
 <form id="signUpForm">
-  bruger<input type="text" id="signUpUser" value="Ole">
-  pw<input type="password" id="signUpPassword" value="123">
+  Brugernavn<input type="text" id="signUpUser" value="">
+  Vælg adgangskode<input type="password" id="signUpPassword" value="">
     <input type="submit" value="Sign Up">
 </form>
 <form id="logInForm">
-  bruger<input type="text" id="logInUser" value="Ole">
-  pw<input type="password" id="logInPassword" value="123">
+  Brugernavn<input type="text" id="logInUser" value="">
+  Adgangskode<input type="password" id="logInPassword" value="">
   <input type="submit" value="Log In">
 </form>
 <form id="getSecretForm">
-  <input type="submit" value="Get Secret">
+  <input type="submit" value="Videre til bogassistenten">
 </form>
 <div id="serverSvar"/>
 <form id="logoutForm">
-  <input type="submit" value="Log Out">
+  <input type="submit" value="Log ud">
 </form>
 </body>
 </html>
